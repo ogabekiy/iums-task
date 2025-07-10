@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  express-app:
+    build: .
+    container_name: express-app
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=myappdb
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:17.5
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: myappdb
+    ports:
+      - "5433:5432"  # Tashqaridan 5433, konteyner ichida 5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
